@@ -1,0 +1,2 @@
+cd /d C:\Users\nyaku\OneDrive\Documents\GitHub\Rust-FiveM
+C:\Users\nyaku\OneDrive\Documents\GitHub\Rust-FiveM\server\FXServer.exe +cd /d C:\Users\nyaku\OneDrive\Documents\GitHub\Rust-FiveM +exec server.cfg
