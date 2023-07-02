@@ -1,4 +1,7 @@
-import {isEnvBrowser} from "./misc";
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+const anyWindow = window as any;
+
+const isEnvBrowser = (): boolean => !anyWindow.invokeNative;
 
 /**
  * Simple wrapper around fetch API tailored for CEF/NUI use. This abstraction
@@ -12,23 +15,28 @@ import {isEnvBrowser} from "./misc";
  * @return returnData - A promise for the data sent back by the NuiCallbacks CB argument
  */
 
-export async function fetchNui<T = any>(eventName: string, data?: any, mockData?: T): Promise<T> {
-  console.log('fetchNui used')
-  const options = {
-    method: 'post',
-    headers: {
-      'Content-Type': 'application/json; charset=UTF-8',
-    },
-    body: JSON.stringify(data),
-  };
+export default async function fetchNui<T = unknown>(
+    eventName: string,
+    data?: unknown,
+    mockData?: T
+): Promise<T> {
+    const options = {
+        method: 'post',
+        headers: {
+            'Content-Type': 'application/json; charset=UTF-8'
+        },
+        body: JSON.stringify({ name: eventName, data })
+    };
 
-  if (isEnvBrowser() && mockData) return mockData;
+    if (isEnvBrowser() && mockData) return mockData;
 
-  const resourceName = (window as any).GetParentResourceName ? (window as any).GetParentResourceName() : 'nui-frame-app';
+    const resourceName = anyWindow.GetParentResourceName
+        ? anyWindow.GetParentResourceName()
+        : 'nui-frame-app';
 
-  const resp = await fetch(`https://${resourceName}/${eventName}`, options);
+    const resp = await fetch(`https://${resourceName}/getNuiCallback`, options);
 
-  const respFormatted = await resp.json()
+    const respFormatted = await resp.json();
 
-  return respFormatted
+    return respFormatted;
 }

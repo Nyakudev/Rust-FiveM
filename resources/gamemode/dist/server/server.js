@@ -1,0 +1,1 @@
+"use strict";on("onResourceStart",resName=>{if(resName===GetCurrentResourceName()){console.log("TypeScript template started!")}});onNet("template:send-message",message=>{console.log(`[Message] ${message}`);emitNet("template:send-notification",source,"Message sent to server. Please check it from console.")});
